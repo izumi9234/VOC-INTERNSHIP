@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Internship Programs | VaultofCodes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+        }
+
+        .logo {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #4361ee;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: #333;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+
+        h1:after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, #4361ee, #3a0ca3);
+            border-radius: 2px;
+        }
+
+        .internship-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .internship-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .internship-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            padding: 20px;
+            color: white;
+            text-align: center;
+        }
+
+        .web-dev .card-header {
+            background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+        }
+
+        .app-dev .card-header {
+            background: linear-gradient(135deg, #f72585 0%, #b5179e 100%);
+        }
+
+        .python .card-header {
+            background: linear-gradient(135deg, #4cc9f0 0%, #4895ef 100%);
+        }
+
+        .java .card-header {
+            background: linear-gradient(135deg, #f77f00 0%, #d62828 100%);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .details-list {
+            list-style: none;
+            margin-bottom: 25px;
+            flex-grow: 1;
+        }
+
+        .details-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+        }
+
+        .details-list li:last-child {
+            border-bottom: none;
+        }
+
+        .details-list i {
+            margin-right: 10px;
+            color: #4361ee;
+            width: 20px;
+        }
+
+        .btn {
+            display: block;
+            text-align: center;
+            padding: 12px 20px;
+            background: #4361ee;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+            margin-top: auto;
+        }
+
+        .btn:hover {
+            background: #3a0ca3;
+        }
+
+        .web-dev .btn:hover {
+            background: #3a0ca3;
+        }
+
+        .app-dev .btn:hover {
+            background: #b5179e;
+        }
+
+        .python .btn:hover {
+            background: #4895ef;
+        }
+
+        .java .btn:hover {
+            background: #d62828;
+        }
+
+        .date-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: white;
+            color: #333;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 900px) {
+            .internship-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.2rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .internship-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">VaultofCodes</div>
+            <p class="tagline">
+                Unlock your potential with our internship programs
+            </p>
+            <h1>Internships</h1>
+        </header>
+        <div class="internship-container">
+            <!-- Web Development Card -->
+            <div class="internship-card web-dev">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <h2 class="card-title">Web Development Internship Program</h2>
+                </div>
+                <div class="card-body">
+                    <ul class="details-list">
+                        <li><i class="far fa-clock"></i> Duration: 1 month/2 months</li>
+                        <li><i class="fas fa-globe"></i> Location: Virtual</li>
+                        <li><i class="fas fa-money-bill-wave"></i> Stipend: -</li>
+                    </ul>
+                    <span class="date-badge">Starts: 05/11/2023</span>
+                    <a href="https://internshala.com/internships/web-development-internship-in-bhubaneswar/"
+                        class="btn">View Details</a>
+                </div>
+            </div>
+            <!-- App Development Card -->
+            <div class="internship-card app-dev">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h2 class="card-title">App Development Internship Program</h2>
+                </div>
+                <div class="card-body">
+                    <ul class="details-list">
+                        <li><i class="far fa-clock"></i> Duration: 1 month/2 months</li>
+                        <li><i class="fas fa-globe"></i> Location: Virtual</li>
+                        <li><i class="fas fa-money-bill-wave"></i> Stipend: -</li>
+                    </ul>
+                    <span class="date-badge">Starts: 05/11/2023</span>
+                    <a href="https://internshala.com/internships/mobile-app-development-internship/" class="btn">View
+                        Details</a>
+                </div>
+            </div>
+            <!-- Python Programming Card -->
+            <div class="internship-card python">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fab fa-python"></i>
+                    </div>
+                    <h2 class="card-title">Python Programming Internship Program</h2>
+                </div>
+                <div class="card-body">
+                    <ul class="details-list">
+                        <li><i class="far fa-clock"></i> Duration: 1 month/2 months</li>
+                        <li><i class="fas fa-globe"></i> Location: Virtual</li>
+                        <li><i class="fas fa-money-bill-wave"></i> Stipend: -</li>
+                    </ul>
+                    <span class="date-badge">Starts: 05/11/2023</span>
+                    <a href="https://www.udemy.com/course/100-days-of-code/?utm_source=bing&utm_medium=udemyads&
+utm_campaign=BG-Search_Keyword_Alpha_Prof_la.EN_cc.India&campaigntype=Search&portfolio=BingIndia&language=EN&product=Course&test=&audience=Keyword&topic=Python&priority=Alpha&
+utm_content=deal4584&
+utm_term=_._ag_1327112923136077_._ad__._kw_python_._de_c_._dm__._pl__._ti_kwd82945677935516%3Aloc-90_._li_1669_._pd__._&matchtype=p&
+msclkid=85f51e6f40f516f914d576c9813c4211&couponCode=PMNVD2025" class="btn">View Details</a>
+                </div>
+            </div>
+            <!-- Java Programming Card -->
+            <div class="internship-card java">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fab fa-java"></i>
+                    </div>
+                    <h2 class="card-title">Java Programming Internship Program</h2>
+                </div>
+                <div class="card-body">
+                    <ul class="details-list">
+                        <li><i class="far fa-clock"></i> Duration: 1 month/2 months</li>
+                        <li><i class="fas fa-globe"></i> Location: Virtual</li>
+                        <li><i class="fas fa-money-bill-wave"></i> Stipend: -</li>
+                    </ul>
+                    <span class="date-badge">Starts: 05/11/2023</span>
+                    <a href="https://internshala.com/internships/work-from-home-Java-internships/" class="btn">View
+                        Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
