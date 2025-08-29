@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive Ramen Recipe Card</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<style>
+    /* ---------- Base & Theme ---------- */
+    :root {
+        --bg: #0f1115;
+        --card: #151823;
+        --ink: #e9eef6;
+        --muted: #a8b0c2;
+        --brand: #ffb86b;
+        --brand-2: #ff6b6b;
+        --ring: rgba(255, 184, 107, 0.35);
+        --border: rgba(255, 255, 255, 0.08);
+        --shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    html,
+    body {
+        height: 100%;
+    }
+
+    body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+            "Helvetica Neue", Arial;
+        color: var(--ink);
+        background: radial-gradient(1000px 400px at 10% -10%,
+                #1e2130 0%,
+                transparent 60%),
+            radial-gradient(1000px 600px at 110% 10%, #221a1e 0%, transparent 60%),
+            var(--bg);
+    }
+
+    /* ---------- Header ---------- */
+    .app-header {
+        max-width: 980px;
+        margin: 24px auto 8px;
+        padding: 0 16px;
+    }
+
+    .app-header h1 {
+        margin: 0 0 8px;
+        font-size: clamp(1.4rem, 3.6vw, 2rem);
+        letter-spacing: 0.4px;
+    }
+
+    .meta {
+        display: flex;
+        gap: 16px;
+        color: var(--muted);
+        font-size: 0.95rem;
+        margin-bottom: 12px;
+    }
+
+    .progress-wrap {
+        position: relative;
+        height: 12px;
+        background: #1b1f2c;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--brand), var(--brand-2));
+        transition: width 0.5s ease;
+    }
+
+    .progress-text {
+        position: absolute;
+        right: 8px;
+        top: -26px;
+        color: var(--muted);
+        font-size: 0.85rem;
+    }
+
+    /* ---------- Layout ---------- */
+    .container {
+        max-width: 980px;
+        margin: 8px auto 42px;
+        padding: 0 16px;
+    }
+
+    .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        animation: cardIn 0.6s ease both;
+    }
+
+    @keyframes cardIn {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .hero {
+        margin: 0;
+        position: relative;
+    }
+
+    .hero img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 16/9;
+        object-fit: cover;
+        filter: saturate(1.1) contrast(1.05);
+        transition: transform 0.5s ease;
+    }
+
+    .hero:hover img {
+        transform: scale(1.02);
+    }
+
+    .hero figcaption {
+        position: absolute;
+        left: 16px;
+        bottom: 10px;
+        background: rgba(0, 0, 0, 0.45);
+        padding: 6px 10px;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+
+    .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 14px 16px 6px;
+    }
+
+    .panel {
+        padding: 6px 16px 18px;
+        border-top: 1px solid var(--border);
+    }
+
+    .panel h2 {
+        margin: 6px 0 10px;
+        font-size: 1.2rem;
+    }
+
+    /* ---------- Ingredients ---------- */
+    .checkable {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 8px;
+    }
+
+    .checkable li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #161a28;
+        border: 1px solid var(--border);
+        padding: 10px 12px;
+        border-radius: 12px;
+        transition: transform 0.15s ease, box-shadow 0.25s ease,
+            border-color 0.25s ease;
+    }
+
+    .checkable input {
+        width: 18px;
+        height: 18px;
+    }
+
+    .checkable li:hover {
+        transform: translateY(-1px);
+    }
+
+    .checkable input:checked+label {
+        text-decoration: line-through;
+        opacity: 0.8;
+    }
+
+    /* ---------- Steps ---------- */
+    #stepsList {
+        counter-reset: step;
+        padding-left: 20px;
+    }
+
+    #stepsList li {
+        margin: 8px 0;
+        padding: 8px 10px;
+        border-left: 3px solid transparent;
+        background: #141826;
+        border-radius: 8px;
+        transition: background 0.25s ease, border-color 0.25s ease,
+            transform 0.2s ease;
+        cursor: pointer;
+    }
+
+    #stepsList li:hover {
+        transform: translateX(4px);
+    }
+
+    .active-step {
+        background: #1e2336;
+        border-color: var(--brand-2);
+        box-shadow: 0 0 0 6px rgba(255, 107, 107, 0.15);
+    }
+
+    /* ---------- Buttons ---------- */
+    .btn {
+        border: 1px solid var(--border);
+        background: linear-gradient(180deg, #22263a, #171a28);
+        color: #fff;
+        padding: 8px 12px;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: transform 0.15s ease, box-shadow 0.25s ease,
+            border-color 0.25s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .btn:active {
+        transform: translateY(0);
+    }
+
+    .btn.solid {
+        background: linear-gradient(90deg, var(--brand), var(--brand-2));
+        border-color: transparent;
+        color: #15151b;
+        font-weight: 700;
+    }
+
+    .btn.outline {
+        background: transparent;
+    }
+
+    /* ---------- Cook controls & Timer ---------- */
+    .cook-controls {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+    }
+
+    .timer {
+        font-variant-numeric: tabular-nums;
+        padding: 6px 10px;
+        border-radius: 10px;
+        background: #121523;
+        border: 1px solid var(--border);
+    }
+
+    /* ---------- Collapsible animation ---------- */
+    .collapsible[hidden] {
+        display: block !important;
+        height: 0;
+        overflow: hidden;
+        padding: 0 16px;
+        border-top: 0;
+    }
+
+    .collapsible {
+        animation: slideDown 0.35s ease both;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-6px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ---------- Footer ---------- */
+    .footer {
+        max-width: 980px;
+        margin: 8px auto 40px;
+        padding: 0 16px;
+        color: var(--muted);
+    }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 700px) {
+        body {
+            font-size: 16px;
+        }
+
+        .meta {
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .controls {
+            padding: 12px;
+        }
+
+        .panel {
+            padding: 6px 12px 16px;
+        }
+    }
+
+    /* ---------- Print-friendly ---------- */
+    @media print {
+        body {
+            background: #fff;
+        }
+
+        .app-header .progress-wrap,
+        .controls .btn,
+        .cook-controls .btn {
+            display: none !important;
+        }
+
+        .card {
+            border: none;
+            box-shadow: none;
+        }
+
+        .hero figcaption {
+            background: none;
+        }
+    }
+</style>
+
+<body>
+    <header class="app-header">
+        <h1> Interactive Ramen Recipe Card</h1>
+        <div class="meta">
+            <span id="prep"> Prep: <strong>30 min</strong></span>
+            <span id="cook"> Cook: <strong>20 min</strong></span>
+            <span id="serves"> Serves: <strong>2</strong></span>
+        </div>
+        <div class="progress-wrap" aria-label="Step progress">
+            <div id="progressBar" class="progress-bar" style="width: 0%"></div>
+            <span id="progressText" class="progress-text">0% complete</span>
+        </div>
+        </hea <main class="container">
+        <article class="card">
+            <figure class="hero">
+                <img src="https://images.unsplash.com/photo-1544025162-d76694265947?
+w=1600&q=80&auto=format&fit=crop" alt="Bowl of shoyu ramen with chashu and egg" />
+                <figcaption>Quick Shoyu Ramen</figcaption>
+            </figure>
+            <section class="controls">
+                <button class="btn" id="toggleIngredients" aria-expanded="false" aria-controls="ingredients">
+                    Show Ingredients
+                </button>
+                <button class="btn" id="toggleSteps" aria-expanded="false" aria-controls="steps">
+                    Show Steps
+                </button>
+                <button class="btn outline" id="printRecipe">
+                    Print / Save as PDF
+                </button>
+            </section>
+            <section id="ingredients" class="panel collapsible" hidden>
+                <h2>Ingredients</h2>
+                <ul class="checkable">
+                    <li>
+                        <input type="checkbox" id="i1" /><label for="i1">200g fresh ramen noodles</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="i2" /><label for="i2">2 cups low-sodium chicken stock</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="i3" /><label for="i3">2 tbsp soy sauce (shoyu)</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="i4" /><label for="i4">1 tbsp mirin</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="i5" /><label for="i5">1 tsp sesame oil</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="i6" /><label for="i6">1 clove garlic, minced</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="i7" /><label for="i7">1 tsp fresh ginger, grated</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="i8" /><label for="i8">2 soft-boiled eggs</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="i9" /><label for="i9">2–4 slices chashu or cooked chicken</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="i10" /><label for="i10">Toppings: scallions, nori, corn,
+                            sesame</label>
+                    </li>
+                </ul>
+            </section>
+            <section id="steps" class="panel collapsible" hidden>
+                <h2>Steps</h2>
+                <ol id="stepsList">
+                    <li>Bring a pot of water to a boil for noodles.</li>
+                    <li>
+                        In a saucepan, warm stock with soy sauce, mirin, sesame oil,
+                        garlic, and ginger.
+                    </li>
+                    <li>Lower heat and simmer 5 minutes to let flavors meld.</li>
+                    <li>
+                        Cook ramen noodles per package (usually 2–3 minutes). Drain.
+                    </li>
+                    <li>Divide noodles into bowls; ladle hot broth over them.</li>
+                    <li>
+                        Top with chashu/chicken, halved soft-boiled eggs, and desired
+                        toppings.
+                    </li>
+                    <li>
+                        Taste and adjust seasoning with more shoyu or stock as needed.
+                    </li>
+                    <li>Serve immediately while steaming hot.</li>
+                </ol>
+                <div class="cook-controls">
+                    <button class="btn solid" id="startCooking">Start Cooking</button>
+                    <button class="btn" id="nextStep" disabled>Next Step</button>
+                    <div class="timer" aria-live="polite">
+                        Remaining: <span id="timerDisplay">30:00</span>
+                    </div>
+                </div>
+            </section>
+        </article>
+        </main>
+        <footer class="footer">
+            <small>Tip: Click ingredients to check them off. Use “Print / Save as PDF” to
+                export.</small>
+        </footer>
+        <script>
+            // --- Interactivity for Ramen Recipe Card ---
+            const toggleIngredientsBtn = document.getElementById("toggleIngredients");
+            const toggleStepsBtn = document.getElementById("toggleSteps")
+            const ingredients = document.getElementById("ingredients");
+            const steps = document.getElementById("steps");
+            const startBtn = document.getElementById("startCooking");
+            const nextBtn = document.getElementById("nextStep");
+            const stepsList = document.getElementById("stepsList");
+            const progressBar = document.getElementById("progressBar");
+            const progressText = document.getElementById("progressText");
+            const timerDisplay = document.getElementById("timerDisplay");
+            const printBtn = document.getElementById("printRecipe");
+            let currentStep = -1;
+            let timer = null;
+            // --- Collapsible toggles with smooth CSS transition (aria-expanded) ---
+            function toggleSection(el, btn) {
+                const isHidden = el.hasAttribute("hidden");
+                if (isHidden) {
+                    el.removeAttribute("hidden");
+                    btn.setAttribute("aria-expanded", "true");
+                } else {
+                    el.setAttribute("hidden", "");
+                    btn.setAttribute("aria-expanded", "false");
+                }
+            }
+            toggleIngredientsBtn.addEventListener("click", () =>
+                toggleSection(ingredients, toggleIngredientsBtn)
+            );
+            toggleStepsBtn.addEventListener("click", () =>
+                toggleSection(steps, toggleStepsBtn)
+            );
+            // --- Cooking flow ---
+            function highlightStep(idx) {
+                const items = [...stepsList.querySelectorAll("li")];
+                items.forEach((li, i) => li.classList.toggle("active-step", i === idx));
+                // Update progress
+                const pct = Math.round(((idx + 1) / items.length) * 100);
+                progressBar.style.width = Math.max(0, pct) + "%";
+                progressText.textContent = idx < 0 ? "0% complete" : pct + "% complete";
+                // Enable/disable next
+                nextBtn.disabled = idx >= items.length - 1;
+            }
+            function startCooking() {
+                // Expand sections if collapsed
+                if (ingredients.hasAttribute("hidden"))
+                    toggleSection(ingredients, toggleIngredientsBtn);
+                if (steps.hasAttribute("hidden")) toggleSection(steps, toggleStepsBtn);
+                currentStep = 0;
+                highlightStep(currentStep);
+                nextBtn.disabled = false;
+                // Start countdown timer for total prep (30 min = 1800s)
+                startTimer(30 * 60);
+            }
+            function nextStep() {
+                const items = stepsList.querySelectorAll("li");
+                if (currentStep < items.length - 1) {
+                    currentStep++;
+                    highlightStep(currentStep);
+                }
+            }
+            // --- Simple countdown timer ---
+            function startTimer(seconds) {
+                clearInterval(timer);
+                let remaining = seconds;
+                updateTimerDisplay(remaining);
+                timer = setInterval(() => {
+                    remaining--;
+                    updateTimerDisplay(remaining);
+                    if (remaining <= 0) {
+                        clearInterval(timer);
+                        timerDisplay.textContent = "00:00";
+                    }
+                }, 1000);
+            }
+            function updateTimerDisplay(s) {
+                const m = Math.floor(s / 60);
+                const sec = s % 60;
+                timerDisplay.textContent = `${String(m).padStart(2, "0")}:${String(
+                    sec
+                ).padStart(2, "0")}`;
+            }
+            // --- Print / Save as PDF ---
+            printBtn.addEventListener("click", () => window.print());
+            // --- Event bindings ---
+            startBtn.addEventListener("click", startCooking);
+            nextBtn.addEventListener("click", nextStep);
+            // Allow clicking a step to jump directly
+            stepsList.addEventListener("click", (e) => {
+                const li = e.target.closest("li");
+                if (!li) return;
+                const idx = [...stepsList.children].indexOf(li);
+                currentStep = idx;
+                highlightStep(currentStep);
+            });
+            // Initialize defaults
+            highlightStep(-1);
+        </script>
+</body>
+
+</html>
